@@ -78,10 +78,13 @@ router.post('/toy', function (req, res) {
         return res.send({'msg': '未上传图片，请重试！'});
     }
     var assessPrice = -1;
-    var imageList = [];
     if (serverIds.length > 0) {
-        wxUtils.downloadImages(serverIds, []).then(function (images) {
-            imageList = images;
+        var imageList = [];
+        Promise.all(serverIds.map(function (serverId) {
+            return wxUtils.downloadImages(serverId).then(function (image) {
+                imageList.push(image);
+            });
+        })).then(function () {
             return models.Item.findAll({
                 attributes: ['id', 'name', 'rate'],
                 where: {
