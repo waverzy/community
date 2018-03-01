@@ -328,10 +328,14 @@ var download = function(uri, timestamp, callback){
     });*/
 };
 
-wxUtils.unifiedOrder = function (body, fee, ip, openid, callback) {
+wxUtils.unifiedOrder = function (body, fee, ip, openid, orderId, callback) {
     var total_fee = parseInt(fee) || 0;
     if(total_fee <= 0) {
         return callback(new Error('未传递订单金额'));
+    }
+    var oid = orderId || '';
+    if(oid === '') {
+        return callback(new Error('未传递订单号'));
     }
     var api_url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
     var params = {};
@@ -340,8 +344,8 @@ wxUtils.unifiedOrder = function (body, fee, ip, openid, callback) {
     params.mch_id = utils.getMchid();
     params.nonce_str = timestamp;
     params.body = body || '执尔科技-运费';
-    params.out_trade_no = timestamp;
-    params.total_fee = fee;
+    params.out_trade_no = oid;
+    params.total_fee = fee*100;//单位：分
     params.spbill_create_ip = ip || '139.196.96.140';
     params.notify_url = 'http://wx.zhiertech.com/wechat/payresult';
     params.trade_type = 'JSAPI';
@@ -413,11 +417,11 @@ wxUtils.closeOrder = function (orderId, callback) {
 };
 
 wxUtils.orderNew = function (close, orderId, body, fee, ip, openid, callback) {
+    var oid = orderId || '';
+    if(oid === '') {
+        return callback(new Error('未传递订单号'));
+    }
     if(close) {
-        var oid = orderId || '';
-        if(oid === '') {
-            return callback(new Error('未传递需关闭订单号'));
-        }
         var api_url = 'https://api.mch.weixin.qq.com/pay/closeorder';
         var params = {};
         var timestamp = Date.now().toString();
@@ -444,7 +448,7 @@ wxUtils.orderNew = function (close, orderId, body, fee, ip, openid, callback) {
                         callback(err);
                     } else {
                         if(jsonStr.xml.return_code === 'SUCCESS' && jsonStr.xml.result_code === 'SUCCESS') {
-                            wxUtils.unifiedOrder(body, fee, ip, callback);
+                            wxUtils.unifiedOrder(body, fee, ip, openid, orderId, callback);
                         } else {
                             callback(null, jsonStr.xml);
                         }
@@ -453,7 +457,7 @@ wxUtils.orderNew = function (close, orderId, body, fee, ip, openid, callback) {
             }
         });
     } else {
-        this.unifiedOrder(body, fee, ip, openid, callback);
+        this.unifiedOrder(body, fee, ip, openid, orderId, callback);
     }
 };
 
