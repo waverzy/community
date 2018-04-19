@@ -1,0 +1,199 @@
+<div class="views">
+    <div class="view view-main">
+        <div class="pages toolbar-fixed">
+            <div data-page="adminToys" class="page">
+                <div class="page-content">
+                    <div class="content-block">
+                        {{#if toys}}
+                            <div class="list-block media-list">
+                                <ul>
+                                    {{#each toys}}
+                                        <li>
+                                            <label class="label-checkbox item-content">
+                                                <input type="checkbox" name="toys-checkbox" value="{{this.tid}}">
+                                                <div class="item-media">
+                                                    <i class="icon icon-form-checkbox"></i>
+                                                </div>
+                                                <div class="item-inner">
+                                                    <div class="item-title">{{this.name}}</div>
+                                                </div>
+                                            </label>
+                                        </li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        {{/if}}
+                        <div id="btn-add" class="button button-big color-gray">+ 添加新玩具</div>
+                        <div style="height: 100px; width: 100%"></div>
+                    </div>
+                </div>
+                <div class="btn-float">
+                    <p class="buttons-row">
+                        <a id="btn-edit" class="button button-round">编辑</a>
+                        <a id="btn-delete" class="button button-round">下架</a>
+                        <a id="btn-view" class="button button-round">预览</a>
+                    </p>
+                </div>
+                <div class="toolbar tabbar tabbar-labels">
+                    <div class="toolbar-inner">
+                        <a href="/review" class="tab-link">
+                            <i class="icon demo-icon-5"></i>
+                            <span class="tabbar-label">审核</span>
+                        </a>
+                        <a href="/orders" class="tab-link">
+                            <i class="icon demo-icon-6"></i>
+                            <span class="tabbar-label">订单</span>
+                        </a>
+                        <a href="/adminSettings" class="tab-link">
+                            <i class="icon demo-icon-7"></i>
+                            <span class="tabbar-label">配置</span>
+                        </a>
+                        <a href="/adminToys" class="tab-link active">
+                            <i class="icon demo-icon-8"></i>
+                            <span class="tabbar-label">上架</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup">
+    <div id="edit-modal" class="content-block">
+        <div class="list-block" style="margin: 44px 0">
+            <ul>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">玩具名（简称）</div>
+                            <div class="item-input">
+                                <input id="ipt-shortName" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">图片</div>
+                            <div class="item-input">
+                                <input id="ipt-pic" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">简述</div>
+                            <div class="item-input">
+                                <textarea id="ipt-desc"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">价格</div>
+                            <div class="item-input">
+                                <input id="ipt-price" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">状态</div>
+                            <div class="item-input">
+                                <select id="sel-state">
+                                    <option value="1" selected>正常</option>
+                                    <option value="0">下架</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">名称</div>
+                            <div class="item-input">
+                                <input id="ipt-name" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">适用年龄</div>
+                            <div class="item-input">
+                                <input id="ipt-age" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">是否需要电池</div>
+                            <div class="item-input">
+                                <input id="ipt-battery" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">描述</div>
+                            <div class="item-input">
+                                <textarea id="ipt-description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">其它信息</div>
+                            <div class="item-input">
+                                <input id="ipt-info" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title label">警告提示</div>
+                            <div class="item-input">
+                                <input id="ipt-tip" type="text">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row" style="margin: -22px auto 20px">
+            <div class="col-50" id="btn-addSlide" style="text-align: center">
+                <i class="icon icon-f7" style="background-image: url('images/add.svg')"></i>
+                <label>添加轮播图</label>
+            </div>
+            <div class="col-50" id="btn-addMain" style="text-align: center">
+                <i class="icon icon-f7" style="background-image: url('images/add.svg')"></i>
+                <label>添加主图</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50">
+                <a class="button button-big close-popup">取消</a>
+            </div>
+            <div class="col-50">
+                <a id="btn-submit" class="button button-big active">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
