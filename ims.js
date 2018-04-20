@@ -43,7 +43,7 @@ router.get('/createWxMenu', function (req, res) {
 
 function createNormalMenu(callback) {
     var menu1 = {};
-    menu1.type = "click";
+    menu1.type = "view";
     menu1.name = "精彩活动";
     menu1.url = "http://mp.weixin.qq.com/s/fpLNshz_QCSi_QZvQd5BfA";
     var menu2 = {};
@@ -51,7 +51,7 @@ function createNormalMenu(callback) {
     menu2.name = "新手指南";
     menu2.url = "http://mp.weixin.qq.com/s/fpLNshz_QCSi_QZvQd5BfA";
     var menu3 = {};
-    menu3.type = "click";
+    menu3.type = "view";
     menu3.name = "玩具置换";
     menu3.url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + utils.getAppid() + "&redirect_uri=http://wx.zhiertech.com/index&response_type=code&scope=snsapi_base#wechat_redirect";
     var button = {};
@@ -81,7 +81,7 @@ function createNormalMenu(callback) {
 
 function createAdminMenu(callback) {
     var menu1 = {};
-    menu1.type = "click";
+    menu1.type = "view";
     menu1.name = "精彩活动";
     menu1.url = "http://mp.weixin.qq.com/s/fpLNshz_QCSi_QZvQd5BfA";
     var menu2 = {};
@@ -89,7 +89,7 @@ function createAdminMenu(callback) {
     menu2.name = "暂未开放";
     menu2.url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + utils.getAppid() + "&redirect_uri=http://wx.zhiertech.com/adminLogin&response_type=code&scope=snsapi_base#wechat_redirect";
     var menu3 = {};
-    menu3.type = "click";
+    menu3.type = "view";
     menu3.name = "玩具置换";
     menu3.url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + utils.getAppid() + "&redirect_uri=http://wx.zhiertech.com/index&response_type=code&scope=snsapi_base#wechat_redirect";
     var button = {};
