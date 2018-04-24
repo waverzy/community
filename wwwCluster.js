@@ -1,113 +1,59 @@
-#!/usr/bin/env node
-
 /**
- * Module dependencies.
+ * Created by waver on 2018/1/24.
  */
-
-var cluster = require('cluster');
-var numCPUs = require('os').cpus().length;
+var models =  require('../models');
+var express = require('express');
+var router = express.Router();
 var log4js = require('../core/log4jsUtil.js'),
     logger = log4js.getLogger();
 
-var app = require('../app');
-var debug = require('debug')('catch:server');
-var http = require('http');
+/*var Promise = require('bluebird');
+var wxUtils = Promise.promisifyAll(require('../core/wxUtils'));*/
 
-if (cluster.isMaster) {
-    logger.info('Master ' + process.pid + ' is running');
-    for (var i = 0; i < numCPUs; i++) {
-        cluster.fork();
-        logger.info('[Worker]' + (i+1) + 'forked');
+router.get('/', function(req, res) {
+    if(req.session.user) {
+        return res.redirect('review');
     }
+    logger.info('user:[' + req.ip + '] open adminLogin.html');
+    res.render('adminLogin');
+});
 
-    cluster.on('exit', function (worker) {
-        logger.error('Worker:' + worker.id + ' died and ready to fork new one');
-        cluster.fork();
-        logger.info('[Worker] new forked');
-    });
-} else {
-
-    /**
-     * Get port from environment and store in Express.
-     */
-
-    var port = normalizePort(process.env.PORT || '3000');
-    app.set('port', port);
-
-    /**
-     * Create HTTP server.
-     */
-
-    var server = http.createServer(app);
-
-    /**
-     * Listen on provided port, on all network interfaces.
-     */
-
-    server.listen(port);
-    server.on('error', onError);
-    server.on('listening', onListening);
-
-    logger.info('Worker ' + cluster.worker.id + ' pid:' + process.pid + ' started');
-}
-
-
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-    var port = parseInt(val, 10);
-
-    if (isNaN(port)) {
-        // named pipe
-        return val;
+router.post('/', function (req, res) {
+    logger.info('user:[' + req.ip + '] begin to login as an administrator');
+    var name = req.body.name || '',
+        password = req.body.password || '';
+    if(name === '' || password === '') {
+        return res.send({'msg': '请输入合法的用户名和密码！'});
     }
+    models.Admin.findOne({
+        where: {
+            name: name,
+            password: password
+        }
+    }).then(function (admin) {
+        if(!admin) {
+            throw new Error('END');
+        }
+        req.session.user = admin.name;
+        req.session.auth = admin.auth;
+        logger.info('user:[' + req.session.user + '] login as an administrator success');
+        return res.send({'msg': 'success'});
+    }).catch(function (error) {
+        if (error.message === 'END') {
+            logger.info('user:[' + req.ip + '] 登录管理员账号失败！');
+            return res.send({'msg': '用户名或密码不正确！'});
+        }
+        logger.error('user:[' + req.ip + '] ' + error.stack);
+        return res.send({'msg': '错误:' + error.message});
+        /*var params = {};
+        params.type = 'system_error';
+        params.keyword1 = 'adminLogin:post';
+        params.keyword2 = new Date().toLocaleString();
+        params.keyword3 = error.message;
+        wxUtils.sendTemplateAsync(params).then(function (response) {
+            logger.error('Has noticed with weixin template message:' + JSON.stringify(response));
+        })*/
+    })
+});
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
-
-    return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
-
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
-
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    debug('Listening on ' + bind);
-}
+module.exports = router;
