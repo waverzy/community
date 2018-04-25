@@ -31,14 +31,14 @@ router.post('/', function (req, res) {
                switch(event) {
                    case "subscribe":
                        var createTime = new Date().getTime();
-                       var content = '您好，欢迎来到换彩童年。\n孩子玩具太多？家里放不下？快来置换大牌新品，把风靡全球的STEAM玩具带回家。\n现在置换更有风靡全球的爆款玩具相送';
+                       var content = '您好，欢迎来到“换”彩童年。\n\n孩子玩具太多？家里放不下？快来置换大牌新品，把风靡全球的STEAM玩具带回家......\n\n<a href="http://mp.weixin.qq.com/s/fpLNshz_QCSi_QZvQd5BfA">现在置换更有风靡全球的爆款玩具相送</a>';
                        return res.send('<xml><ToUserName><![CDATA[' + openid + ']]></ToUserName><FromUserName><![CDATA[' + wxName + ']]></FromUserName><CreateTime><![CDATA[' + createTime + ']]></CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' + content + ']]></Content></xml>');
                        break;
                    default:
-                       logger.info('Weixin Event:' + jsonStr.xml);
+                       logger.info('Weixin Event:' + jsonStr);
                }
            } else {
-               logger.info('Weixin Event:' + jsonStr.xml);
+               logger.info('Weixin Event:' + jsonStr);
            }
        });
    });
